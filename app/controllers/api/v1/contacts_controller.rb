@@ -1,6 +1,6 @@
 class Api::V1::ContactsController < Api::V1::ApiController
   before_action :set_contact, only: [:show, :update, :destroy]
-  before_action :require_authentication!, only: [:show, :update, :destroy]
+  before_action :require_authorization!, only: [:show, :update, :destroy]
 
   # GET /api/v1/contacts
   def index
@@ -10,7 +10,7 @@ class Api::V1::ContactsController < Api::V1::ApiController
 
   # GET /api/v1/contacts/:id
   def show
-    render json: @contacts
+    render json: @contact
   end
 
   # POST /api/v1/contacts
@@ -51,8 +51,9 @@ class Api::V1::ContactsController < Api::V1::ApiController
   end
 
   # Compara se o usuário atual é mesmo do banco de dados, para evitar que um outro usuário apague dados de outro usuário.
-  def require_authentication!
+  def require_authorization!
     unless current_user == @contact.user
       render json: {}, status: :forbidden
+    end
   end
 end
